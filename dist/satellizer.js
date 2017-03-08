@@ -729,7 +729,8 @@
             return this.$q(function (resolve, reject) {
                 angular.extend(_this.defaults, options);
                 var stateName = _this.defaults.name + '_state';
-                var _a = _this.defaults, name = _a.name, state = _a.state, popupOptions = _a.popupOptions, redirectUri = _a.redirectUri, responseType = _a.responseType;
+                var _a = _this.updateUserData(_this.defaults, userData);
+                var name = _a.name, state = _a.state, popupOptions = _a.popupOptions, redirectUri = _a.redirectUri, responseType = _a.responseType;
                 if (typeof state === 'function') {
                     _this.SatellizerStorage.set(stateName, state());
                 }
@@ -748,6 +749,17 @@
                     resolve(_this.exchangeForToken(oauth, userData));
                 }).catch(function (error) { return reject(error); });
             });
+        };
+        OAuth2.prototype.updateUserData = function(defaults, userData) {
+            if (userData !== undefined) {
+                if (userData.clientId !== undefined) {
+                    defaults.clientId = userData.clientId;
+                }
+                if (userData.redirectUri !== undefined) {
+                    defaults.redirectUri = userData.redirectUri;
+                }
+            }
+            return defaults;
         };
         OAuth2.prototype.exchangeForToken = function (oauthData, userData) {
             var _this = this;
